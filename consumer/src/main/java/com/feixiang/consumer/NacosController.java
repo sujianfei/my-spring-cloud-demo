@@ -19,7 +19,7 @@ public class NacosController {
     @GetMapping(value = "/echo/{str}")
     public String echo(@PathVariable String str) {
         //Access through the combination of LoadBalanceClient and RestTemplate
-        ServiceInstance serviceInstance = loadBalancerClient.choose("nacos-provider");
+        ServiceInstance serviceInstance = loadBalancerClient.choose("provider");
         String path = String.format("http://%s:%s/echo/%s", serviceInstance.getHost(), serviceInstance.getPort(), str);
         System.out.println("request path:" + path);
         String result = restTemplate.getForObject(path, String.class);
