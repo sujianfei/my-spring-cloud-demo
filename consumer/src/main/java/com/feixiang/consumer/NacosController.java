@@ -1,5 +1,7 @@
 package com.feixiang.consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -16,13 +18,19 @@ public class NacosController {
     @Autowired
     private RestTemplate restTemplate;
 
+    private final Logger logger= LoggerFactory.getLogger(NacosController.class);
+
     @GetMapping(value = "/echo/{str}")
     public String echo(@PathVariable String str) {
         //Access through the combination of LoadBalanceClient and RestTemplate
+
+        logger.error("hello skywalking consumer error");
         ServiceInstance serviceInstance = loadBalancerClient.choose("provider");
         String path = String.format("http://%s:%s/echo/%s", serviceInstance.getHost(), serviceInstance.getPort(), str);
         System.out.println("request path:" + path);
         String result = restTemplate.getForObject(path, String.class);
+
+
         return result;
     }
 
